@@ -22,6 +22,10 @@ conda activate qanything-python
 git clone -b qanything-python https://github.com/netease-youdao/QAnything.git
 cd QAnything
 pip install -e .
+# 如果OCR服务使用cuda12和gpu,则
+pip uninstall onnxruntime -y
+pip uninstall onnxruntime-gpu -y
+pip install onnxruntime-gpu --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/
 ```
 
 ## 在Windows WSL或Linux环境下运行3B大模型（MiniChat-2-3B）要求显存>=10GB

@@ -74,7 +74,7 @@ class LocalDocQA:
             self.local_rerank_backend: RerankTorchBackend = RerankTorchBackend(self.use_cpu)
             self.embeddings: EmbeddingTorchBackend = EmbeddingTorchBackend(self.use_cpu)
         self.mysql_client = KnowledgeBaseManager()
-        self.ocr_reader = OCRQAnything(model_dir=OCR_MODEL_PATH, device="cpu")  # 省显存
+        self.ocr_reader = OCRQAnything(model_dir=OCR_MODEL_PATH, device="cpu" if self.use_cpu else "cuda" )
         debug_logger.info(f"OCR DEVICE: {self.ocr_reader.device}")
         self.faiss_client = FaissClient(self.mysql_client, self.embeddings)
 
@@ -101,7 +101,10 @@ class LocalDocQA:
             self.mysql_client.update_content_length(local_file.file_id, content_length)
             debug_logger.info(f'split time: {end - start} {len(local_file.docs)}')
             self.mysql_client.update_chunk_size(local_file.file_id, len(local_file.docs))
-            add_ids = await self.faiss_client.add_document(local_file.docs)
+            try :
+                add_ids = await self.faiss_client.add_document(local_file.docs)
+            except :
+                pass 
             insert_time = time.time()
             debug_logger.info(f'insert time: {insert_time - end}')
             self.mysql_client.update_file_status(local_file.file_id, status='green')

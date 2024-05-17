@@ -23,6 +23,10 @@ conda activate qanything-python
 git clone -b qanything-python https://github.com/netease-youdao/QAnything.git
 cd QAnything
 pip install -e .
+# if ocrservice use cuda12 and gpu,then
+pip uninstall onnxruntime -y
+pip uninstall onnxruntime-gpu -y
+pip install onnxruntime-gpu --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/
 ```
 
 ## Run With 3B LLM (MiniChat-2-3B) On Windows WSL or Linux (Require GPU with >=10GB Memory)
